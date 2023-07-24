@@ -29,6 +29,7 @@ async function run() {
       .db("endgameDb")
       .collection("CollegeCards");
     const admissionCollection = client.db("endgameDb").collection("admission");
+    const reviewsCollection = client.db("endgameDb").collection("reviews");
 
     const indexKeys = { collegeName: 1 };
     const indexOptions = { name: "CollegeName" };
@@ -65,6 +66,16 @@ async function run() {
       const email = req.query.email;
       const filter = { candidateEmail: email };
       const result = await admissionCollection.find(filter).toArray();
+      res.send(result);
+    });
+
+    app.post("/reviews", async (req, res) => {
+      const reviewInfo = req.body;
+      const result = await reviewsCollection.insertOne(reviewInfo);
+      res.send(result);
+    });
+    app.get("/reviews", async (req, res) => {
+      const result = await reviewsCollection.find().toArray();
       res.send(result);
     });
 
